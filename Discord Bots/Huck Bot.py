@@ -145,7 +145,7 @@ async def guild_activity():
                 guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
 
             # Print to Guild-Activity Channel
-            channel = client.get_channel(771453774370832425)
+            channel = client.get_channel(773622971923169340)
             await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
 
             # Print to JSON file
@@ -153,7 +153,6 @@ async def guild_activity():
                 json.dump(guild_activities, guild_activity_file, indent=2)
 
         # Notify in terminal
-        print(new_achieves)
         print('Guild Activity File Updated', datetime.datetime.now())
         await asyncio.sleep(5)
 
