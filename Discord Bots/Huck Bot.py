@@ -1,6 +1,6 @@
 # Imports
 import discord
-from datetime import datetime
+import datetime
 from bs4 import BeautifulSoup
 import requests
 import random
@@ -8,7 +8,7 @@ import os
 import json
 import time
 import asyncio
-
+import difflib
 
 # Set bot basic info
 cwd = os.path.dirname(__file__)
@@ -47,7 +47,7 @@ wow_server = False
 server_slug = 'frostmane'
 
 # Set datetime
-now = datetime.now()
+now = datetime.datetime.now()
 
 # Bot "playing" status game list
 game_list = [
@@ -92,6 +92,71 @@ game_list = [
     'Escape From Tarkov',
 ]
 
+# Creat function to compare existing file and new JSON
+def compare_array(guild_activity_file, guild_activities):
+    if not guild_activity_file:
+        new_activities = guild_activities
+        return new_activities
+    else:
+        new_activities = [i for i in guild_activities if i not in guild_activity_file]
+        return new_activities
+
+# Guild Activity Feed
+async def guild_activity():
+    generate_token()
+
+    # Create Loop
+    while True:
+        # Retrieve Guild Activity Feed
+        guild_activity_api = "https://us.api.blizzard.com/data/wow/guild/frostmane/badstein-bears/activity?namespace=profile-us&locale=en_US&access_token=" + my_token
+        guild_activity_req = requests.get(guild_activity_api)
+        guild_activity_j = guild_activity_req.json()
+
+        # Get Guild Activities
+        guild_activities = guild_activity_j['activities']
+
+        # Set Current Working Directory
+        guild_activity = os.path.join(cwd, "guildactivity.json")
+
+        # Open Guild Activity JSON file
+        with open(guild_activity, 'r') as f:
+            my_f = f.read()
+
+            guild_activity_file = json.loads(my_f)
+
+        # Compare API result to Old Guild Activity JSON
+        new_achieves = compare_array(guild_activity_file, guild_activities)
+        
+        if new_achieves:
+
+            # Get Achievement details from JSON
+            for new_achieve in new_achieves:
+
+                # Get latest guild activity achievement character
+                guild_activity_latest = new_achieve['character_achievement']['character']['name']
+
+                # Get latest guild activity achievement
+                guild_activity_latest_achiev = new_achieve['character_achievement']['achievement']['name']
+
+                # Get latest guild activity timestamp
+                guild_activity_latest_time = new_achieve['timestamp']
+
+                # Convert time to datetime
+                guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+
+            # Print to Guild-Activity Channel
+            channel = client.get_channel(771453774370832425)
+            await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
+
+            # Print to JSON file
+            with open(guild_activity, 'w') as guild_activity_file:
+                json.dump(guild_activities, guild_activity_file, indent=2)
+
+        # Notify in terminal
+        print(new_achieves)
+        print('Guild Activity File Updated', datetime.datetime.now())
+        await asyncio.sleep(5)
+
 # Weekly Mythic+ Affixes Request
 async def weekly_affixes(message):
     affixes = "https://raider.io/api/v1/mythic-plus/affixes?region=us"
@@ -109,7 +174,7 @@ async def status_update():
     while True:
         # Changes Bot Game Playing Status
         await client.change_presence(status=discord.Status.online, activity=discord.Game(random.choice(game_list)))
-        print('status updated', datetime.now())
+        print('status updated', datetime.datetime.now())
         # Chooses new game at random time between 1 hour and 10 hours
         await asyncio.sleep(random.randrange(3600, 36000))
 
@@ -132,7 +197,8 @@ async def wow_token(message):
 async def character_render(message, char_render, render_server):
     generate_token()
 
-    char_render_api = (f"https://us.api.blizzard.com/profile/wow/character/{render_server}/{char_render}/character-media?namespace=profile-us&locale=en_US&access_token=US0CKA0PqOtscRX18Bi6GuWSlgZxaFZYS4")
+    # API Call
+    char_render_api = (f"https://us.api.blizzard.com/profile/wow/character/{render_server}/{char_render}/character-media?namespace=profile-us&locale=en_US&access_token={my_token}")
     char_render_req = requests.get(char_render_api)
     char_render_j = char_render_req.json()
 
@@ -213,7 +279,7 @@ async def server_status(slug, message):
             else:
                 print(f"The above realms are {status}.")
                 wow_server = True
-                await message.channel.send('{0.author.mention} ' f'{server_slug} is up nerd! Go play!'.format(message))
+                await message.channel.send('{0.author.mention}' f'{server_slug} is up nerd! Go play!'.format(message))
                 break
 
 # Bot Commands & Interactions
@@ -234,10 +300,6 @@ async def on_message(message):
             return
         print('@ mention message received')
         await message.channel.send('Hey {0.author.mention}, I respond to: !huck "hello", "wadup", "servers", "status", "shadowlands", "token", "affixes", "help"'.format(message))
-
-    # # Tron Check
-    # if message.author.id == 195131527053574144:
-    #     await message.channel.send('{0.author.mention} https://i.giphy.com/media/44Eq3Ab5LPYn6/200.webp'.format(message))
         
 
     # Check message to see if it's calling me
@@ -278,8 +340,8 @@ async def on_message(message):
         # Shadowlands Countdown -  Counts seconds between current date/time and shadowlands release
         if bot_command.startswith('shadowlands countdown') or bot_command.startswith('shadowlands'):
 
-            futuredate = datetime.strptime('Nov 23 2020 18:00', '%b %d %Y %H:%M')
-            nowdate = datetime.now()
+            futuredate = datetime.datetime.strptime('Nov 23 2020 18:00', '%b %d %Y %H:%M')
+            nowdate = datetime.datetime.now()
             count = int((futuredate - nowdate).total_seconds())
             days = count // 86400
             hours = (count - days * 86400) // 3600
@@ -315,8 +377,7 @@ async def on_message(message):
         # Change Bot Status
         if bot_command.startswith('status'):
             await client.change_presence(status=discord.Status.online, activity=discord.Game(random.choice(game_list)))
-            print('status updated', datetime.now())
-
+            print('status updated', datetime.datetime.now())
 
 # Ready Check
 @client.event
@@ -326,6 +387,7 @@ async def on_ready():
     print(client.user.id)
     print(now)
     print('------')
+    await guild_activity()
 
 client.loop.create_task(status_update())
 client.run(bot_token)
