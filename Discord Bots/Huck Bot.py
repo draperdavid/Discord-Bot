@@ -13,6 +13,7 @@ import difflib
 # Set bot basic info
 cwd = os.path.dirname(__file__)
 
+# Get personal information from JSON file
 myCreds = os.path.join(cwd, "myCreds.json")
 with open(myCreds, 'r') as f:
     myCreds = f.read()
@@ -21,6 +22,7 @@ bot_token = creds['bot_token']
 disc_bot = creds['discbot_name']
 client_id = creds['client_id']
 client_secret = creds['client_secret']
+guild_activity_channel = creds['guild_activity_channel']
 
 # API stuff
 token_url = 'https://us.battle.net/oauth/token'
@@ -145,7 +147,7 @@ async def guild_activity():
                 guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
 
             # Print to Guild-Activity Channel
-            channel = client.get_channel(773622971923169340)
+            channel = client.get_channel(guild_activity_channel)
             await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
 
             # Print to JSON file
@@ -154,7 +156,7 @@ async def guild_activity():
 
         # Notify in terminal
         print('Guild Activity File Updated', datetime.datetime.now())
-        await asyncio.sleep(5)
+        await asyncio.sleep(30)
 
 # Weekly Mythic+ Affixes Request
 async def weekly_affixes(message):
@@ -307,6 +309,12 @@ async def on_message(message):
         bot_command = (message_to_lower.replace(disc_bot, '')).lstrip()
 
         #  After this point command check will determine what command if any is used
+
+        # WoWhead Database Search
+        if bot_command.startswith('wowhead'):
+            search = bot_command.replace('wowhead ', '')
+            search_final = ((search.strip()).replace(" ","+"))
+            await message.channel.send('{0.author.mention} : ' f'https://www.wowhead.com/search?q={search_final}'.format(message))
 
         # Basic Hello message from bot
         if bot_command.startswith('hello') or bot_command.startswith('wadup'):
