@@ -104,9 +104,9 @@ def compare_array(guild_activity_file, guild_activities):
         return new_activities
 
 # Guild Activity Feed
-async def guild_activity():
+async def guild_activity(guild_activity_channel):
     generate_token()
-
+    
     # Create Loop
     while True:
         # Retrieve Guild Activity Feed
@@ -379,7 +379,7 @@ async def on_message(message):
 
         # Gives list of possible commands
         if bot_command.startswith('help'):
-            await message.channel.send('I only respond to: "hello", "wadup", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", ')
+            await message.channel.send('I only respond to: "hello", "wadup", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", "wowhead", ')
 
         # Change Bot Status
         if bot_command.startswith('status'):
@@ -394,7 +394,7 @@ async def on_ready():
     print(client.user.id)
     print(now)
     print('------')
-    await guild_activity()
+    await guild_activity(guild_activity_channel)
 
 client.loop.create_task(status_update())
 client.run(bot_token)
