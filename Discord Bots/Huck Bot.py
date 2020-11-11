@@ -307,15 +307,7 @@ async def on_message(message):
     # Insures bot doesn't speak to itself
     if message.author == client.user:
         return
-
-    # Reply from bot mention
-    if client.user.mentioned_in(message) and message.author.bot is not True:
-        if "everyone" or "here" in message_to_lower:
-            return
-        print('@ mention message received')
-        await message.channel.send('Hey {0.author.mention}, I respond to: !huck "hello", "wadup", "servers", "status", "shadowlands", "token", "affixes", "help"'.format(message))
-        
-
+      
     # Check message to see if it's calling me
     if message_to_lower.startswith(disc_bot):
 
