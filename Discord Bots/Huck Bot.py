@@ -323,7 +323,7 @@ async def on_message(message):
             await message.channel.send('{0.author.mention} : ' f'https://www.wowhead.com/search?q={search_final}'.format(message))
 
         # Basic Hello message from bot
-        if bot_command.startswith('hello') or bot_command.startswith('wadup'):
+        if bot_command.startswith('hello'):
             await message.channel.send('Hello {0.author.mention}, you rat...'.format(message))
 
         # Weekly Affixes
@@ -349,7 +349,7 @@ async def on_message(message):
             quick_sim = (f'https://www.raidbots.com/simbot/quick?region=us&realm={char_server}&name={char_name}')
 
             # Send reply to discord
-            await message.channel.send('{0.author.mention} Your quicksim url is: ' f'{quick_sim}' '.'.format(message))
+            await message.channel.send('{0.author.mention} Your quicksim url is: ' f'{quick_sim}'.format(message))
 
         # Shadowlands Countdown -  Counts seconds between current date/time and shadowlands release
         if bot_command.startswith('shadowlands countdown') or bot_command.startswith('shadowlands'):
@@ -390,7 +390,7 @@ async def on_message(message):
 
         # Gives list of possible commands
         if bot_command.startswith('help'):
-            await message.channel.send('I only respond to: "hello", "wadup", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", "wowhead", ')
+            await message.channel.send('I only respond to: "hello", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", "wowhead"')
 
         # Change Bot Status
         if bot_command.startswith('status'):
