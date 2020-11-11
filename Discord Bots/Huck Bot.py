@@ -10,21 +10,22 @@ import time
 import asyncio
 import difflib
 
-# Set bot basic info
+# Set basic bot information
 cwd = os.path.dirname(__file__)
 
-# Get personal information from JSON file
+# Get personalized bot information from JSON file
 myCreds = os.path.join(cwd, "myCreds.json")
 with open(myCreds, 'r') as f:
     myCreds = f.read()
     creds = json.loads(myCreds)
+
 bot_token = creds['bot_token']
 disc_bot = creds['discbot_name']
 client_id = creds['client_id']
 client_secret = creds['client_secret']
 guild_activity_channel = creds['guild_activity_channel']
 
-# API stuff
+# API URL
 token_url = 'https://us.battle.net/oauth/token'
 
 # Function to get current/refresh token
@@ -94,7 +95,7 @@ game_list = [
     'Escape From Tarkov',
 ]
 
-# Creat function to compare existing file and new JSON
+# Creat function to compare existing file and new JSON for "guild_activity"
 def compare_array(guild_activity_file, guild_activities):
     if not guild_activity_file:
         new_activities = guild_activities
@@ -143,7 +144,7 @@ async def guild_activity(guild_activity_channel):
                 # Get latest guild activity timestamp
                 guild_activity_latest_time = new_achieve['timestamp']
 
-                # Convert time to datetime
+                # Convert timestamp to date and time
                 guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
 
             # Print to Guild-Activity Channel
@@ -167,15 +168,18 @@ async def weekly_affixes(message):
     # Set Variables
     real_weekly_affixes = affixes_j['title']
 
+    # Send reply to discord
     await message.channel.send('{0.author.mention} The weekly Mythic+ affixes are: ' f'{real_weekly_affixes}' '.'.format(message))
 
 # Bot Status Update
 async def status_update():
     await client.wait_until_ready()
     while True:
+
         # Changes Bot Game Playing Status
         await client.change_presence(status=discord.Status.online, activity=discord.Game(random.choice(game_list)))
         print('status updated', datetime.datetime.now())
+        
         # Chooses new game at random time between 1 hour and 10 hours
         await asyncio.sleep(random.randrange(3600, 36000))
 
@@ -190,8 +194,10 @@ async def wow_token(message):
     # Set Variables
     wow_token_price = wow_token_j['price']
 
+    # Format wow token price to gold
     wow_token_price_final = "{:,}".format(int(wow_token_price / 10000))
 
+    # Send reply to discord
     await message.channel.send('{0.author.mention} WoW Tokens are currently: ' f'{wow_token_price_final}' 'g'.format(message))
 
 # WoW Character Render Request
@@ -209,9 +215,10 @@ async def character_render(message, char_render, render_server):
         await message.channel.send('{0.author.mention}'f' {server_slug} isnt a server or {char_render} isnt a character, dumbass...'.format(message))
         return
     else:
-        #Set Variable
+        # Set Variable
         character_render_link = char_render_j['assets'][3]['value']
 
+        # Send reply to discord
         await message.channel.send('{0.author.mention}, Here is your character: ' f'{character_render_link}'.format(message))
 
 # Server Status Request
@@ -221,12 +228,12 @@ async def server_status(slug, message):
     # Execute function
     generate_token()
 
-    # Search for realm by slug
+    # Search for server realm by slug
     realm_api = "https://us.api.blizzard.com/data/wow/realm/" + slug + "?namespace=dynamic-us&locale=en_US&access_token=" + my_token
     realm_req = requests.get(realm_api)
     realm_j = realm_req.json()
 
-    # Make sure entered realm is valid
+    # Check if entered realm is valid
     if "code" in realm_j:
         print('Error code: ', realm_j["code"])
         print('Realm Detail: ', realm_j["detail"])
@@ -249,9 +256,13 @@ async def server_status(slug, message):
 
         if status == 'Up':
             wow_server = True
-            await message.channel.send('{0.author.mention} ' f'{server_slug} is up nerd! Go play!'.format(message))
+
+            # Send reply to discord
+            await message.channel.send('{0.author.mention} ' f'{server_slug}  is up nerd! Go play!'.format(message))
         else:
             wow_server = False
+
+            # Send reply to discord
             await message.channel.send('{0.author.mention} 'f' {server_slug} is Down, I will notify you when the server comes online.'.format(message))
 
         # Get connected-realm group status
@@ -280,6 +291,8 @@ async def server_status(slug, message):
             else:
                 print(f"The above realms are {status}.")
                 wow_server = True
+
+                # Send reply to discord
                 await message.channel.send('{0.author.mention}' f'{server_slug} is up nerd! Go play!'.format(message))
                 break
 
@@ -305,6 +318,7 @@ async def on_message(message):
 
     # Check message to see if it's calling me
     if message_to_lower.startswith(disc_bot):
+
         # Remove !botname and remove leading whitespace
         bot_command = (message_to_lower.replace(disc_bot, '')).lstrip()
 
@@ -342,6 +356,7 @@ async def on_message(message):
 
             quick_sim = (f'https://www.raidbots.com/simbot/quick?region=us&realm={char_server}&name={char_name}')
 
+            # Send reply to discord
             await message.channel.send('{0.author.mention} Your quicksim url is: ' f'{quick_sim}' '.'.format(message))
 
         # Shadowlands Countdown -  Counts seconds between current date/time and shadowlands release
@@ -357,6 +372,8 @@ async def on_message(message):
 
             SL_Countdown = "{} days {} hours {} minutes {} seconds left until Shadowlands!".format(days, hours, minutes,
                                                                                                    seconds)
+            
+            # Send reply to discord
             await message.channel.send(SL_Countdown)
 
         # What should I play
@@ -370,10 +387,12 @@ async def on_message(message):
         # Checks WoW server status and notifies discord channel via bot if server is up or down.
         if bot_command.startswith('servers'):
             await message.channel.send('Checking...')
+
             # Strips input to server slug - replaces specified command with stripped input
             realminfo = bot_command.replace('servers','')
             if realminfo != '':
                 server_slug = ((realminfo.strip()).replace("'","")).replace(' ','-')
+
             # Execute server_status function
             await server_status(server_slug, message)
 
@@ -394,6 +413,8 @@ async def on_ready():
     print(client.user.id)
     print(now)
     print('------')
+
+    # Start guild activity loop
     await guild_activity(guild_activity_channel)
 
 client.loop.create_task(status_update())
