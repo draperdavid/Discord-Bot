@@ -13,7 +13,7 @@ import difflib
 # Set basic bot information
 cwd = os.path.dirname(__file__)
 
-# First time setup - create personalized JSON
+# First time setup - create personalized JSON credentials file
 my_creds = 'my_creds.json'
 
 if os.path.exists('my_creds.json'):
@@ -35,7 +35,7 @@ else:
         with open('my_creds.json', 'w+') as my_creds:
             json.dump(credentials_list, my_creds, indent=2)
 
-# Get personalized bot information from JSON file
+# Get personalized bot information from JSON credentials file
 my_creds = os.path.join(cwd, "my_creds.json")
 with open(my_creds, 'r') as f:
     my_creds = f.read()
