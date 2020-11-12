@@ -27,9 +27,10 @@ else:
         client_id = input("Add your Discord bot's client ID: ")
         client_secret = input("Add your Discord bot's client secret: ")
         guild_activity_channel = input("Add your Guild Activity Text Channel ID: ")
+        default_server_slug = input("Add your default WoW server slug: ")
 
         credentials_list = {"client_id": str(client_id), "client_secret": str(client_secret), "bot_token": str(bot_token), "discbot_name": str(disc_bot), 
-        "guild_activity_channel": int(guild_activity_channel)}
+        "guild_activity_channel": int(guild_activity_channel), "default_server_slug": str(default_server_slug)}
 
         with open('my_creds.json', 'w+') as my_creds:
             json.dump(credentials_list, my_creds, indent=2)
@@ -45,6 +46,7 @@ disc_bot = creds['discbot_name']
 client_id = creds['client_id']
 client_secret = creds['client_secret']
 guild_activity_channel = creds['guild_activity_channel']
+default_server_slug = creds['default_server_slug']
 
 # # API URL
 token_url = 'https://us.battle.net/oauth/token'
@@ -66,9 +68,6 @@ client = discord.Client()
 
 # Create server status object for bot
 wow_server = False
-
-# Choose your server by inserting your server's slug
-default_server_slug = 'frostmane'
 
 # Set datetime
 now = datetime.datetime.now()
