@@ -17,7 +17,7 @@ cwd = os.path.dirname(__file__)
 my_creds = 'my_creds.json'
 
 if os.path.exists('my_creds.json'):
-    print('Credintials Acquired')
+    print('Credentials Acquired...')
     exit
 else:
     with open('my_creds.json', 'w+') as my_creds:
@@ -68,7 +68,7 @@ client = discord.Client()
 wow_server = False
 
 # Choose your server by inserting your server's slug
-server_slug = 'frostmane'
+default_server_slug = 'frostmane'
 
 # Set datetime
 now = datetime.datetime.now()
@@ -233,7 +233,7 @@ async def character_render(message, char_render, render_server):
     if "code" in char_render_j:
         print('Error code: ', char_render_j["code"])
         print('Realm Detail: ', char_render_j["detail"])
-        await message.channel.send('{0.author.mention}'f' {server_slug} isnt a server or {char_render} isnt a character, dumbass...'.format(message))
+        await message.channel.send('{0.author.mention}'f' {default_server_slug} isnt a server or {char_render} isnt a character, dumbass...'.format(message))
         return
     else:
         # Set Variable
@@ -259,7 +259,7 @@ async def server_status(slug, message):
         print('Error code: ', realm_j["code"])
         print('Realm Detail: ', realm_j["detail"])
         wow_server = 'Invalid'
-        await message.channel.send('{0.author.mention}'f' {server_slug} isnt a server, dumbass...'.format(message))
+        await message.channel.send('{0.author.mention}'f' {default_server_slug} isnt a server...'.format(message))
         return
     else:
         # Lookup the selected realm connected-realm ID
@@ -279,12 +279,12 @@ async def server_status(slug, message):
             wow_server = True
 
             # Send reply to discord
-            await message.channel.send('{0.author.mention} ' f'{server_slug}  is up nerd! Go play!'.format(message))
+            await message.channel.send('{0.author.mention} ' f'{default_server_slug} is up nerd! Go play!'.format(message))
         else:
             wow_server = False
 
             # Send reply to discord
-            await message.channel.send('{0.author.mention} 'f' {server_slug} is Down, I will notify you when the server comes online.'.format(message))
+            await message.channel.send('{0.author.mention} 'f' {default_server_slug} is Down, I will notify you when the server comes online.'.format(message))
 
         # Get connected-realm group status
         i = 0
@@ -314,13 +314,13 @@ async def server_status(slug, message):
                 wow_server = True
 
                 # Send reply to discord
-                await message.channel.send('{0.author.mention}' f'{server_slug} is up nerd! Go play!'.format(message))
+                await message.channel.send('{0.author.mention}' f'{default_server_slug} is up nerd! Go play!'.format(message))
                 break
 
 # Bot Commands & Interactions
 @client.event
 async def on_message(message):
-    global server_slug
+    global default_server_slug
 
     # Convert messages to lower case
     message_to_lower = message.content.lower()
@@ -404,10 +404,10 @@ async def on_message(message):
             # Strips input to server slug - replaces specified command with stripped input
             realminfo = bot_command.replace('servers','')
             if realminfo != '':
-                server_slug = ((realminfo.strip()).replace("'","")).replace(' ','-')
+                default_server_slug = ((realminfo.strip()).replace("'","")).replace(' ','-')
 
             # Execute server_status function
-            await server_status(server_slug, message)
+            await server_status(default_server_slug, message)
 
         # Gives list of possible commands
         if bot_command.startswith('help'):
