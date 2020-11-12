@@ -157,7 +157,7 @@ async def guild_activity(guild_activity_channel):
 
         # Notify in terminal
         print('Guild Activity File Updated', datetime.datetime.now())
-        await asyncio.sleep(30)
+        await asyncio.sleep(600)
 
 # Weekly Mythic+ Affixes Request
 async def weekly_affixes(message):
