@@ -13,11 +13,32 @@ import difflib
 # Set basic bot information
 cwd = os.path.dirname(__file__)
 
+# First time setup - create personalized JSON
+my_creds = 'my_creds.json'
+
+if os.path.exists('my_creds.json'):
+    print('Credintials Acquired')
+    exit
+else:
+    with open('my_creds.json', 'w+') as my_creds:
+
+        bot_token = input("Add your Discord bot's API Token: ")
+        disc_bot = input("Add your Discord bot's name: ")
+        client_id = input("Add your Discord bot's client ID: ")
+        client_secret = input("Add your Discord bot's client secret: ")
+        guild_activity_channel = input("Add your Guild Activity Text Channel ID: ")
+
+        credentials_list = {"client_id": str(client_id), "client_secret": str(client_secret), "bot_token": str(bot_token), "discbot_name": str(disc_bot), 
+        "guild_activity_channel": int(guild_activity_channel)}
+
+        with open('my_creds.json', 'w+') as my_creds:
+            json.dump(credentials_list, my_creds, indent=2)
+
 # Get personalized bot information from JSON file
-myCreds = os.path.join(cwd, "myCreds.json")
-with open(myCreds, 'r') as f:
-    myCreds = f.read()
-    creds = json.loads(myCreds)
+my_creds = os.path.join(cwd, "my_creds.json")
+with open(my_creds, 'r') as f:
+    my_creds = f.read()
+    creds = json.loads(my_creds)
 
 bot_token = creds['bot_token']
 disc_bot = creds['discbot_name']
@@ -25,7 +46,7 @@ client_id = creds['client_id']
 client_secret = creds['client_secret']
 guild_activity_channel = creds['guild_activity_channel']
 
-# API URL
+# # API URL
 token_url = 'https://us.battle.net/oauth/token'
 
 # Function to get current/refresh token
