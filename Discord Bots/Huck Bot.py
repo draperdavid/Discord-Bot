@@ -152,7 +152,7 @@ async def guild_activity(guild_activity_channel):
             await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
 
             # Print to JSON file
-            with open(guild_activity, 'w') as guild_activity_file:
+            with open(guild_activity, 'w+') as guild_activity_file:
                 json.dump(guild_activities, guild_activity_file, indent=2)
 
         # Notify in terminal
