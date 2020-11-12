@@ -23,7 +23,7 @@ else:
     with open('my_creds.json', 'w+') as my_creds:
 
         bot_token = input("Add your Discord bot's API Token: ")
-        disc_bot = input("Add your Discord bot's name: ")
+        disc_bot = input("Add your Discord bot's name (start with '!'): ")
         client_id = input("Add your Discord bot's client ID: ")
         client_secret = input("Add your Discord bot's client secret: ")
         guild_activity_channel = input("Add your Guild Activity Text Channel ID: ")
