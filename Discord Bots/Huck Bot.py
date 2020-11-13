@@ -31,7 +31,7 @@ else:
         guild_slug = input("Add your guild slug: ")
 
         credentials_list = {"client_id": str(client_id), "client_secret": str(client_secret), "bot_token": str(bot_token), "discbot_name": str(disc_bot), 
-        "guild_activity_channel": int(guild_activity_channel), "default_server_slug": str(default_server_slug)}
+        "guild_activity_channel": int(guild_activity_channel), "default_server_slug": str(default_server_slug), "guild_slug": str(guild_slug)}
 
         # Write to JSON
         json.dump(credentials_list, my_creds, indent=2)
