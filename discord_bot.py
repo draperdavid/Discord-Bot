@@ -116,7 +116,6 @@ game_list = [
     'Escape From Tarkov',
 ]
 
-
 # Creat function to compare existing file and new JSON for "guild_activity"
 def compare_array(guild_activity_file, guild_activities):
     if not guild_activity_file:
@@ -126,71 +125,77 @@ def compare_array(guild_activity_file, guild_activities):
         new_activities = [i for i in guild_activities if i not in guild_activity_file]
         return new_activities
 
-
 # Guild Activity Feed
 async def guild_activity(guild_activity_channel):
     generate_token()
     
-    # Set working Directory
+    # Create JSON file
     guild_activity = os.path.join(cwd, 'guildactivity.json')
 
-    # Check/Create Guild Activity JSON File
-    if not os.path.exists(guild_activity):
-        print('Creating Guild Activity File...')
+    if os.path.exists(guild_activity):
+        print("Guild Activity File Verified...")
+        exit
+    elif not os.path.exists(guild_activity):
         with open(guild_activity, "w+") as guild_activity:
-            print('Guild Activity File Created...') 
-        return
-    else:
-        # Create Loop
-        while True:
-            # Retrieve Guild Activity Feed
+        
             guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/{default_server_slug}/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
             guild_activity_req = requests.get(guild_activity_api)
             guild_activity_j = guild_activity_req.json()
 
-            # Get Guild Activities
-            guild_activities = guild_activity_j['activities']
+            json.dump(guild_activity_j, guild_activity, indent=2)
 
-            # Set Current Working Directory
-            guild_activity = os.path.join(cwd, "guildactivity.json")
+            print("Guild Activity File Created...")
 
-            # Open Guild Activity JSON file
-            with open(guild_activity, 'w+') as f:
-                my_f = f.read()
+    # Create Loop
+    while True:
+        # Retrieve Guild Activity Feed
+        guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/{default_server_slug}/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
+        guild_activity_req = requests.get(guild_activity_api)
+        guild_activity_j = guild_activity_req.json()
 
-                guild_activity_file = json.loads(my_f)
+        # Get Guild Activities
+        guild_activities = guild_activity_j['activities']
 
-            # Compare API result to Old Guild Activity JSON
-            new_achieves = compare_array(guild_activity_file, guild_activities)
-            
-            if new_achieves:
+        # Set Current Working Directory
+        guild_activity = os.path.join(cwd, "guildactivity.json")
 
-                # Get Achievement details from JSON
-                for new_achieve in new_achieves:
+        # Open Guild Activity JSON file
+        with open(guild_activity, 'r') as f:
+            my_f = f.read()
 
-                    # Get latest guild activity achievement character
-                    guild_activity_latest = new_achieve['character_achievement']['character']['name']
+            guild_activity_file = json.loads(my_f)
 
-                    # Get latest guild activity achievement
-                    guild_activity_latest_achiev = new_achieve['character_achievement']['achievement']['name']
+        # Compare API result to Old Guild Activity JSON
+        new_achieves = compare_array(guild_activity_file, guild_activities)
+        
+        if new_achieves:
 
-                    # Get latest guild activity timestamp
-                    guild_activity_latest_time = new_achieve['timestamp']
+            # Get Achievement details from JSON
+            for new_achieve in new_achieves:
 
-                    # Convert timestamp to date and time
-                    guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+                # Get latest guild activity achievement character
+                guild_activity_latest = new_achieve['character_achievement']['character']['name']
 
-                # Print to Guild-Activity Channel
-                channel = client.get_channel(guild_activity_channel)
-                await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
+                # Get latest guild activity achievement
+                guild_activity_latest_achiev = new_achieve['character_achievement']['achievement']['name']
 
-                # Print to JSON file
-                with open(guild_activity, 'w+') as guild_activity_file:
-                    json.dump(guild_activities, guild_activity_file, indent=2)
+                # Get latest guild activity timestamp
+                guild_activity_latest_time = new_achieve['timestamp']
 
-            # Notify in terminal
-            print('Guild Activity File Updated', datetime.datetime.now())
-            await asyncio.sleep(600)
+                # Convert timestamp to date and time
+                guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+
+            # Print to Guild-Activity Channel
+            channel = client.get_channel(guild_activity_channel)
+            await channel.send(f'{guild_activity_latest}: {guild_activity_latest_achiev} ' '(' f'{guild_time}' ')')
+
+            # Print to JSON file
+            with open(guild_activity, 'w+') as guild_activity_file:
+                json.dump(guild_activities, guild_activity_file, indent=2)
+
+        # Notify in terminal
+        print('Guild Activity File Updated', datetime.datetime.now())
+        await asyncio.sleep(600)
 
 # Weekly Mythic+ Affixes Request
 async def weekly_affixes(message):
