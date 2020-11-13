@@ -37,8 +37,8 @@ else:
 
 # Get personalized bot information from JSON credentials file
 with open(my_creds, 'r') as f:
-    my_creds = f.read()
-    creds = json.loads(my_creds)
+    creds_file = f.read()
+    creds = json.loads(creds_file)
 
 bot_token = creds['bot_token']
 disc_bot = creds['discbot_name']
