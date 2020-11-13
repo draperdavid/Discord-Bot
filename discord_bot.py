@@ -351,6 +351,15 @@ async def on_message(message):
         if bot_command.startswith('affixes'):
             await weekly_affixes(message)
 
+        # Raider.io
+        if bot_command.startswith('raiderio'):
+            raider_info = (bot_command.replace('raiderio', '')).lstrip()
+            raider_character_info = raider_info.split(" ", 1)
+            raider_character = raider_character_info[0]
+            raider_server = raider_character_info[1]
+
+            await message.channel.send('{0.author.mention} Here is the Raider.io profile: ' f'https://raider.io/characters/us/{raider_server}/{raider_character}'.format(message))
+
         # Raw Character Render Request
         if bot_command.startswith('showme'):
             render_info = (bot_command.replace('showme', '')).lstrip()
