@@ -24,8 +24,8 @@ else:
 
         bot_token = input("Add your Discord bot's API Token: ")
         disc_bot = input("Add your Discord bot's name (start with '!'): ")
-        client_id = input("Add your Discord bot's client ID: ")
-        client_secret = input("Add your Discord bot's client secret: ")
+        client_id = input("Add your WoW API client ID: ")
+        client_secret = input("Add your WoW API client secret: ")
         guild_activity_channel = input("Add your Guild Activity Text Channel ID: ")
         default_server_slug = input("Add your default WoW server slug: ")
         guild_slug = input("Add your guild slug: ")
@@ -48,6 +48,7 @@ client_secret = creds['client_secret']
 guild_activity_channel = creds['guild_activity_channel']
 default_server_slug = creds['default_server_slug']
 guild_slug = creds['guild_slug']
+
 # # API URL
 token_url = 'https://us.battle.net/oauth/token'
 
