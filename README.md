@@ -1,6 +1,6 @@
 # Discord-Bot
 
-This is a discord bot for discord focused on providing information relating to World of Warcraft. It accesses information using the World of Warcraft API and returns it to desired channels within a discord server.
+This is a bot for discord focused on providing information relating to World of Warcraft. It accesses information using the World of Warcraft API and returns it to desired channels within a discord server.
 
 ## Features:
 
