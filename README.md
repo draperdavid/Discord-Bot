@@ -12,6 +12,7 @@ This is a bot for discord focused on providing information relating to World of 
 - Creates link to raidbots quicksim with populated character information
 - Checks weekly Mythic+ affixes
 - Runs WoWhead searches
+- Runs Raider.io searches
 
 ## Commands: 
 
@@ -39,6 +40,8 @@ This is a bot for discord focused on providing information relating to World of 
   - replies with link to raidbots quicksim for requested character. Example: !bot quicksim "character server" "character name"
 - !bot servers
   - replies with current server status of default (or specified) server. if server is down, begins a loop which repeats until server comes online - then notifies sender.
+- !bot raiderio
+  - replies with link to specified character/server on Raider.io. Example: !bot raiderio "character name" "character server"
   
   ## Setup
   
