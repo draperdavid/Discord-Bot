@@ -131,13 +131,13 @@ def compare_array(guild_activity_file, guild_activities):
 async def guild_activity(guild_activity_channel):
     generate_token()
     
-    # Create JSON file
+    # Set working Directory
     guild_activity = os.path.join(cwd, 'guildactivity.json')
 
-    # Check for guildactivity.json
+    # Check/Create Guild Activity JSON File
     if not os.path.exists(guild_activity):
         print('Creating Guild Activity File...')
-        with open(guild_activity, "w+"):
+        with open(guild_activity, "w+") as guild_activity:
             print('Guild Activity File Created...') 
         return
     else:
@@ -155,7 +155,7 @@ async def guild_activity(guild_activity_channel):
             guild_activity = os.path.join(cwd, "guildactivity.json")
 
             # Open Guild Activity JSON file
-            with open(guild_activity, 'r') as f:
+            with open(guild_activity, 'w+') as f:
                 my_f = f.read()
 
                 guild_activity_file = json.loads(my_f)
