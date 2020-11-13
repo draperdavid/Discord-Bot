@@ -14,13 +14,13 @@ import difflib
 cwd = os.path.dirname(__file__)
 
 # First time setup - create personalized JSON credentials file
-my_creds = 'my_creds.json'
+my_creds = os.path.join(cwd, 'my_creds.json')
 
-if os.path.exists('my_creds.json'):
+if os.path.exists(my_creds):
     print('Credentials Acquired...')
     exit
 else:
-    with open('my_creds.json', 'w+') as my_creds:
+    with open(my_creds, 'w+') as my_creds:
 
         bot_token = input("Add your Discord bot's API Token: ")
         disc_bot = input("Add your Discord bot's name (start with '!'): ")
@@ -32,11 +32,10 @@ else:
         credentials_list = {"client_id": str(client_id), "client_secret": str(client_secret), "bot_token": str(bot_token), "discbot_name": str(disc_bot), 
         "guild_activity_channel": int(guild_activity_channel), "default_server_slug": str(default_server_slug)}
 
-        with open('my_creds.json', 'w+') as my_creds:
-            json.dump(credentials_list, my_creds, indent=2)
+        # Write to JSON
+        json.dump(credentials_list, my_creds, indent=2)
 
 # Get personalized bot information from JSON credentials file
-my_creds = os.path.join(cwd, "my_creds.json")
 with open(my_creds, 'r') as f:
     my_creds = f.read()
     creds = json.loads(my_creds)
@@ -424,7 +423,7 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print(now)
-    print('------')
+    print('------------------------------------------------------')
 
     # Start guild activity loop
     await guild_activity(guild_activity_channel)
