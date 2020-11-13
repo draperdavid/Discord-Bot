@@ -132,7 +132,7 @@ async def guild_activity(guild_activity_channel):
     # Create Loop
     while True:
         # Retrieve Guild Activity Feed
-        guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/frostmane/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
+        guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/{default_server_slug}/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
         guild_activity_req = requests.get(guild_activity_api)
         guild_activity_j = guild_activity_req.json()
 
