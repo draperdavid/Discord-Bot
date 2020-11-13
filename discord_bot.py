@@ -136,13 +136,13 @@ async def guild_activity(guild_activity_channel):
         print("Guild Activity File Verified...")
         exit
     elif not os.path.exists(guild_activity):
-        with open(guild_activity, "w+") as guild_activity:
+        with open(guild_activity, "w+") as guild_activity_file:
         
             guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/{default_server_slug}/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
             guild_activity_req = requests.get(guild_activity_api)
             guild_activity_j = guild_activity_req.json()
 
-            json.dump(guild_activity_j, guild_activity, indent=2)
+            json.dump(guild_activity_j, guild_activity_file, indent=2)
 
             print("Guild Activity File Created...")
 
