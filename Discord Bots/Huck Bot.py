@@ -28,6 +28,7 @@ else:
         client_secret = input("Add your Discord bot's client secret: ")
         guild_activity_channel = input("Add your Guild Activity Text Channel ID: ")
         default_server_slug = input("Add your default WoW server slug: ")
+        guild_slug = input("Add your guild slug: ")
 
         credentials_list = {"client_id": str(client_id), "client_secret": str(client_secret), "bot_token": str(bot_token), "discbot_name": str(disc_bot), 
         "guild_activity_channel": int(guild_activity_channel), "default_server_slug": str(default_server_slug)}
@@ -46,7 +47,7 @@ client_id = creds['client_id']
 client_secret = creds['client_secret']
 guild_activity_channel = creds['guild_activity_channel']
 default_server_slug = creds['default_server_slug']
-
+guild_slug = creds['guild_slug']
 # # API URL
 token_url = 'https://us.battle.net/oauth/token'
 
@@ -130,7 +131,7 @@ async def guild_activity(guild_activity_channel):
     # Create Loop
     while True:
         # Retrieve Guild Activity Feed
-        guild_activity_api = "https://us.api.blizzard.com/data/wow/guild/frostmane/badstein-bears/activity?namespace=profile-us&locale=en_US&access_token=" + my_token
+        guild_activity_api = (f"https://us.api.blizzard.com/data/wow/guild/frostmane/{guild_slug}/activity?namespace=profile-us&locale=en_US&access_token={my_token}") 
         guild_activity_req = requests.get(guild_activity_api)
         guild_activity_j = guild_activity_req.json()
 
