@@ -13,6 +13,7 @@ This is a bot for discord focused on providing information relating to World of 
 - Checks weekly Mythic+ affixes
 - Runs WoWhead searches
 - Runs Raider.io searches
+- Updates what game your bot is "playing" at random intervals.
 
 ## Commands: 
 
