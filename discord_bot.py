@@ -129,12 +129,15 @@ def compare_array(guild_activity_file, guild_activities):
 async def guild_activity(guild_activity_channel):
     generate_token()
     
-    # Create JSON file
+    # Set path
     guild_activity = os.path.join(cwd, 'guildactivity.json')
 
+    # Check if Guild Activity File Exists
     if os.path.exists(guild_activity):
         print("Guild Activity File Verified...")
         exit
+    
+    # If no Guild Activity File, Create Guild Activity File from current JSON
     elif not os.path.exists(guild_activity):
         with open(guild_activity, "w+") as guild_activity_file:
         
@@ -142,7 +145,7 @@ async def guild_activity(guild_activity_channel):
             guild_activity_req = requests.get(guild_activity_api)
             guild_activity_j = guild_activity_req.json()
 
-            json.dump(guild_activity_j, guild_activity_file, indent=2)
+            json.dump(guild_activity_j['activities'], guild_activity_file, indent=2)
 
             print("Guild Activity File Created...")
 
@@ -156,9 +159,6 @@ async def guild_activity(guild_activity_channel):
         # Get Guild Activities
         guild_activities = guild_activity_j['activities']
 
-        # Set Current Working Directory
-        guild_activity = os.path.join(cwd, "guildactivity.json")
-
         # Open Guild Activity JSON file
         with open(guild_activity, 'r') as f:
             my_f = f.read()
@@ -166,7 +166,7 @@ async def guild_activity(guild_activity_channel):
             guild_activity_file = json.loads(my_f)
 
         # Compare API result to Old Guild Activity JSON
-        new_achieves = compare_array(guild_activity_file, guild_activities)
+        new_achieves = compare_array(guild_activity_file['activities'], guild_activity_j['activities'])
         
         if new_achieves:
 
@@ -191,7 +191,7 @@ async def guild_activity(guild_activity_channel):
 
             # Print to JSON file
             with open(guild_activity, 'w+') as guild_activity_file:
-                json.dump(guild_activities, guild_activity_file, indent=2)
+                json.dump(guild_activity_j['activities'], guild_activity_file, indent=2)
 
         # Notify in terminal
         print('Guild Activity File Updated', datetime.datetime.now())
