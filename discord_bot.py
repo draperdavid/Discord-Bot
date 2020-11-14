@@ -437,7 +437,7 @@ async def on_message(message):
 
         # Gives list of possible commands
         if bot_command.startswith('help'):
-            await message.channel.send('I only respond to: "hello", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", "wowhead"')
+            await message.channel.send('I only respond to: "hello", "servers", "status", "token", "shadowlands", "affixes", "quicksim server character", "showme character server", "wowhead", "raiderio character server')
 
         # Change Bot Status
         if bot_command.startswith('status'):
