@@ -156,9 +156,6 @@ async def guild_activity(guild_activity_channel):
         guild_activity_req = requests.get(guild_activity_api)
         guild_activity_j = guild_activity_req.json()
 
-        # Get Guild Activities
-        guild_activities = guild_activity_j['activities']
-
         # Open Guild Activity JSON file
         with open(guild_activity, 'r') as f:
             my_f = f.read()
