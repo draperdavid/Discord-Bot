@@ -163,10 +163,10 @@ async def guild_activity(guild_activity_channel):
         with open(guild_activity, 'r') as f:
             my_f = f.read()
 
-            guild_activity_file = json.loads(my_f)
+            guild_activity_read = json.loads(my_f)
 
         # Compare API result to Old Guild Activity JSON
-        new_achieves = compare_array(guild_activity_file['activities'], guild_activity_j['activities'])
+        new_achieves = compare_array(guild_activity_read, guild_activity_j['activities'])
         
         if new_achieves:
 
