@@ -171,16 +171,39 @@ async def guild_activity(guild_activity_channel):
             for new_achieve in new_achieves:
 
                 # Get latest guild activity achievement character
-                guild_activity_latest = new_achieve['character_achievement']['character']['name']
+                if 'character_achievement' in new_achieve:
+                    guild_activity_latest = new_achieve['character_achievement']['character']['name']
 
-                # Get latest guild activity achievement
-                guild_activity_latest_achiev = new_achieve['character_achievement']['achievement']['name']
+                    # Get latest guild activity achievement
+                    guild_activity_latest_achiev = new_achieve['character_achievement']['achievement']['name']
 
-                # Get latest guild activity timestamp
-                guild_activity_latest_time = new_achieve['timestamp']
+                    # Get latest guild activity timestamp
+                    guild_activity_latest_time = new_achieve['timestamp']
 
-                # Convert timestamp to date and time
-                guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+                    # Convert timestamp to date and time
+                    guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+                elif 'encounter_completed' in new_achieve:
+
+                    # Set to guild encounter
+                    guild_activity_latest = "Guild Encounter Completed"
+
+                    # Encounter name
+                    encounter_mode = new_achieve['encounter_completed']['mode']['name']
+                    encounter_name = new_achieve['encounter_completed']['encounter']['name']
+
+                    # Guild activity
+                    guild_activity_latest_achiev = encounter_mode + ': ' + encounter_name
+
+                    # Get latest guild activity timestamp
+                    guild_activity_latest_time = new_achieve['timestamp']
+
+                    # Convert timestamp to date and time
+                    guild_time = datetime.datetime.fromtimestamp(guild_activity_latest_time / 1000)
+
+                else:
+                    guild_activity_latest = "Error"
+                    guild_activity_latest_time = "Error"
+                    guild_time = "Error"
 
             # Print to Guild-Activity Channel
             channel = client.get_channel(guild_activity_channel)
@@ -398,7 +421,7 @@ async def on_message(message):
         # Shadowlands Countdown -  Counts seconds between current date/time and shadowlands release
         if bot_command.startswith('shadowlands countdown') or bot_command.startswith('shadowlands'):
 
-            futuredate = datetime.datetime.strptime('Nov 23 2020 18:00', '%b %d %Y %H:%M')
+            futuredate = datetime.datetime.strptime('Nov 23 2020 23:00', '%b %d %Y %H:%M')
             nowdate = datetime.datetime.now()
             count = int((futuredate - nowdate).total_seconds())
             days = count // 86400
